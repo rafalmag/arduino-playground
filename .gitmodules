@@ -1,3 +1,6 @@
 [submodule "hardware/espressif/esp32"]
 	path = hardware/espressif/esp32
 	url = https://github.com/espressif/arduino-esp32.git
+[submodule "libraries/DHT_sensor_library_for_ESPx"]
+	path = libraries/DHT_sensor_library_for_ESPx
+	url = https://github.com/beegee-tokyo/DHTespOrg.git
