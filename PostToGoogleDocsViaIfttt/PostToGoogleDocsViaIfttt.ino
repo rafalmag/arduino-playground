@@ -19,8 +19,10 @@
 const char* host = "maker.ifttt.com";
 const char* eventId   = "test";
 
-String url = String("https://") + host + "/trigger/" + eventId + "/with/key/" + iftttKey;
+String uri = String("/trigger/") + eventId + "/with/key/" + iftttKey;
 
+// last cert from 
+// openssl s_client -showcerts -connect maker.ifttt.com:443
 const char* rootCa = "-----BEGIN CERTIFICATE-----\n" \
                      "MIIEADCCAuigAwIBAgIBADANBgkqhkiG9w0BAQUFADBjMQswCQYDVQQGEwJVUzEh\n" \
                      "MB8GA1UEChMYVGhlIEdvIERhZGR5IEdyb3VwLCBJbmMuMTEwLwYDVQQLEyhHbyBE\n" \
@@ -45,7 +47,6 @@ const char* rootCa = "-----BEGIN CERTIFICATE-----\n" \
                      "dEr/VxqHD3VILs9RaRegAhJhldXRQLIQTO7ErBBDpqWeCtWVYpoNz4iCxTIM5Cuf\n" \
                      "ReYNnyicsbkqWletNw+vHX/bvZ8=\n" \
                      "-----END CERTIFICATE-----\n";
-
 void setup()
 {
   Serial.begin(115200);
@@ -93,45 +94,32 @@ void loop()
 
   if (value < 0) return;
 
-  // https://github.com/espressif/arduino-esp32/blob/master/libraries/WiFiClientSecure/examples/WiFiClientSecure/WiFiClientSecure.ino
-  WiFiClientSecure client;
-  /* set SSL/TLS certificate */
-  client.setCACert(rootCa);
+  Serial.println("[HTTPS] begin to " + uri);
+  // configure traged server and url
+  HTTPClient https;
+  https.begin(host, 443, uri, rootCa); //HTTPS
+  https.addHeader("Content-Type", "application/json; charset=utf-8");
 
-  Serial.println("Connect to server via port 443");
-  if (!client.connect(host, 443)) {
-    Serial.println("Connection failed!");
-    return;
-  }
-  Serial.println("Connected to server!");
+
+  Serial.print("[HTTPS] POST...\n");
 
   String data = String("{\"value1\":") + hallRead() + ",\"value2\":" + temp() + ",\"value3\":\"vv31\"}";
-  /* create HTTP request */
-  client.println(String("POST ") + url + " HTTP/1.1");
-  client.println(String("Host: ") + host);
-  client.println("Content-Type: application/json; charset=utf-8");
-  client.println(String("Content-Length: ") + data.length());
-  client.println();
-  client.println(data);
-  client.println();
+  int httpCode = https.POST(data);
 
-  Serial.print("Waiting for response ");
-  while (!client.available()) {
-    delay(50); //
-    Serial.print(".");
+  // httpCode will be negative on error
+  if (httpCode > 0) {
+    // HTTP header has been send and Server response header has been handled
+    Serial.printf("[HTTPS] POST... code: %d\n", httpCode);
+    if (httpCode == HTTP_CODE_OK) {
+      String payload = https.getString();
+      Serial.println(payload);
     }
-  /* if data is available then receive and print to Terminal */
-  while (client.available()) {
-    char c = client.read();
-    Serial.write(c);
+  } else {
+    Serial.printf("[HTTPS] POST... failed, error: %s\n", https.errorToString(httpCode).c_str());
   }
 
-  /* if the server disconnected, stop the client */
-  if (!client.connected()) {
-    Serial.println();
-    Serial.println("Server disconnected");
-    client.stop();
-  }
+  https.end();
+
 }
 
 
