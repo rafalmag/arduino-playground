@@ -3,6 +3,10 @@
  
 void setup()
 {
+  // SDA 21/ SCL 22 - lolin32 default
+  // SDA 5/ SCL 4 - old default
+  
+  // SDA, SCL
   Wire.begin(5,4);
  
   Serial.begin(9600);
