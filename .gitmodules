@@ -7,3 +7,6 @@
 [submodule "libraries/ESP8266_and_ESP32_Oled_Driver_for_SSD1306_display"]
 	path = libraries/ESP8266_and_ESP32_Oled_Driver_for_SSD1306_display
 	url = https://github.com/ThingPulse/esp8266-oled-ssd1306.git
+[submodule "libraries/esp32-lcd"]
+	path = libraries/esp32-lcd
+	url = https://github.com/nhatuan84/esp32-lcd.git
