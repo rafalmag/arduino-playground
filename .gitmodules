@@ -10,6 +10,6 @@
 [submodule "libraries/esp32-lcd"]
 	path = libraries/esp32-lcd
 	url = https://github.com/nhatuan84/esp32-lcd.git
-[submodule "Adafruit_RGB_LCD_Shield_Library"]
-	path = Adafruit_RGB_LCD_Shield_Library
+[submodule "libraries/Adafruit_RGB_LCD_Shield_Library"]
+	path = libraries/Adafruit_RGB_LCD_Shield_Library
 	url = https://github.com/adafruit/Adafruit-RGB-LCD-Shield-Library.git
