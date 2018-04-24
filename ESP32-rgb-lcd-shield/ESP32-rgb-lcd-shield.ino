@@ -7,19 +7,14 @@ When a button is pressed, the backlight changes color.
 
 **********************/
 
-#define ESP8266
-
+//#include <Arduino.h>
 // include the library code:
 #include <Wire.h>
 #include <Adafruit_RGBLCDShield.h>
 #include <utility/Adafruit_MCP23017.h>
 
 
-
-// The shield uses the I2C SCL and SDA pins. On classic Arduinos
-// this is Analog 4 and 5 so you can't use those for analogRead() anymore
-// However, you can connect other I2C sensors to the I2C bus and share
-// the I2C bus.
+// The shield uses the default I2C SCL 22 and SDA 21 pins on ESP32.
 Adafruit_RGBLCDShield lcd = Adafruit_RGBLCDShield();
 
 // These #defines make it easy to set the backlight color
@@ -43,7 +38,7 @@ void setup() {
   lcd.print("Hello, world!");
   time = millis() - time;
   Serial.print("Took "); Serial.print(time); Serial.println(" ms");
-  lcd.setBacklight(RED);
+  lcd.setBacklight(WHITE);
 }
 
 uint8_t i=0;
@@ -55,35 +50,30 @@ void loop() {
   lcd.print(millis()/1000);
 
   uint8_t buttons = lcd.readButtons();
-//  Serial.println(String("buttons ") + buttons);
+
   if (buttons) {
-    
     lcd.clear();
     lcd.setCursor(0,0);
     if (buttons & BUTTON_UP) {
-      Serial.print("up");
       lcd.print("UP ");
       lcd.setBacklight(RED);
     }
     if (buttons & BUTTON_DOWN) {
-      Serial.print("down");
       lcd.print("DOWN ");
       lcd.setBacklight(YELLOW);
     }
     if (buttons & BUTTON_LEFT) {
-      Serial.print("left");
       lcd.print("LEFT ");
       lcd.setBacklight(GREEN);
     }
     if (buttons & BUTTON_RIGHT) {
-      Serial.print("right");
       lcd.print("RIGHT ");
       lcd.setBacklight(TEAL);
     }
     if (buttons & BUTTON_SELECT) {
-      Serial.print("select");
       lcd.print("SELECT ");
       lcd.setBacklight(VIOLET);
     }
   }
 }
+
