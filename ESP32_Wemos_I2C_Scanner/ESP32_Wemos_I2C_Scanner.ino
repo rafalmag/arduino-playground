@@ -7,7 +7,7 @@ void setup()
   // SDA 5/ SCL 4 - old default
   
   // SDA, SCL
-  Wire.begin(5,4);
+  Wire.begin(21,22);
  
   Serial.begin(9600);
   Serial.println("\nI2C Scanner");
